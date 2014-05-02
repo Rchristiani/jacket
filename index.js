@@ -1,13 +1,12 @@
 #!/usr/bin/env node
+'use strict';
 
 var argv = require('optimist').argv;
 var http = require('http');
-var sys = require('sys')
+var sys = require('sys');
 var exec = require('child_process').exec;
-
-
-var apiKey = 'a30713ae62fb4d00';
 var location;
+
 
 if(argv.location !== undefined || argv.loc !== undefined) {
 	location = argv.location || argv.loc;
@@ -15,7 +14,7 @@ if(argv.location !== undefined || argv.loc !== undefined) {
 	var country = splitList[0];
 	var city = splitList[1];
 	var apiUrl = 'http://api.wunderground.com/';
-	var path = 'api/a30713ae62fb4d00/geolookup/forecast/q/'+ country +'/' + city + '.json';
+	var path = 'api/a30713ae62fb4d00/geolookup/conditions/q/'+ country +'/' + city + '.json';
 	var data = '';
 	http.get(apiUrl + path, function(res) {
 		res.on('data',function(chunk) {
@@ -24,19 +23,22 @@ if(argv.location !== undefined || argv.loc !== undefined) {
 		res.on('end', function() {
 			// Comes back as string, so you need to parse it
 			data = JSON.parse(data);
-			banner(data);
+			printToScreen(data.current_observation);
 		});
-	});	
+	});
 }
 else {
 	console.log('Please provide a location with either --location or --loc');
 }
 
-function banner(data) {
-	exec('banner', function(error, stdout, stdin) {
-		sys.puts(stdout);
-	});
+function printToScreen(data) {
+	var temp = data.temp_c;
+	var conditions = data.weather;
+
+	if(temp > 15 && temp < 20) {
+		console.log("No I think you will be ok");
+	}
+	else if(temp < 15) {
+		console.log("Yes");
+	}
 }
-
-
-console.log(location);
