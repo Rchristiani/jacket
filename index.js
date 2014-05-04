@@ -3,8 +3,6 @@
 
 var argv = require('optimist').argv;
 var http = require('http');
-var sys = require('sys');
-var exec = require('child_process').exec;
 var location;
 
 
@@ -40,5 +38,8 @@ function printToScreen(data) {
 	}
 	else if(temp < 15) {
 		console.log("Yes");
+	}
+	else {
+		console.log("It is too damn hot outside!");
 	}
 }
